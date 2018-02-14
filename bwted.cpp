@@ -29,6 +29,12 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 		perms[i][length] = '\0';
 	}
 
+	for(int i=1;i<length;i++){
+		for(int j=0;j<length;j++){
+			perms[i][j] = perms[i-1][j-1<0 ? length-1 : j-1];
+		}
+	}
+
 	
 	for(int i=0;i<length;i++){
 		printf("%s\n", perms[i]);
