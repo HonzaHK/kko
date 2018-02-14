@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 #include <string.h>
 
 #include "bwted.hpp"
@@ -76,10 +76,13 @@ int main(int argc, char* argv[]){
 		printf("encode: %d\n",res);
 	}
 	else if(clargs.mode==decode){
+		int res = BWTDecoding(&record,ifile,ofile);
 		printf("decode\n");
 	}
 
-	//todo: write to logfile, if present
-	//todo: close files
+	fclose(ifile);
+	fclose(ofile);
+	// todo: write to logfile, if present
+	// todo: close files
 	return 0;
 }
