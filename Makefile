@@ -6,10 +6,17 @@ EXE=bwted
 all: exe
 
 lib:
-	
 
 exe: lib
-	${CC} ${CFLAGS} main.cpp -o ${EXE}
+	@echo "--COMPILE EXE------------------------------------------------"
+	@${CC} ${CFLAGS} main.cpp bwted.cpp bwted.hpp -o ${EXE}
 
 run: exe
-	./${EXE}
+	@echo "--EXECUTE----------------------------------------------------"
+	@./${EXE} -i test/test.txt -o test/test_out.txt -l test/test_log.txt -c
+
+clean:
+	rm -rf ${EXE} test/*_out.txt
+
+zip:
+	echo zip
