@@ -3,6 +3,30 @@
 
 #include "bwted.hpp"
 
+char alphabet[256];
+
+void BWTenc(char* input, int length){
+
+}
+
+
+
+
+void MTFenc(char* input, int length){
+	printf("%s (%d)\n", input,length);
+	for(int i=0; i<256;i++){
+		alphabet[i] = (unsigned char) i;
+		printf("%c", alphabet[i]);
+	}
+}
+
+
+
+void RLEenc(char* input, int length){
+	printf("%s (%d)\n", input,length);
+}
+
+
 
 int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	printf("BWTEncoding...\n");
@@ -21,6 +45,12 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	}
 
 	printf("input: %s\n", input);
+
+
+	MTFenc(input,length);
+	return 0;
+
+
 
 	char** perms = (char**) malloc(length*sizeof(char*));
 	for(int i=0;i<length;i++){
