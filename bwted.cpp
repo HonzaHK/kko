@@ -3,7 +3,8 @@
 
 #include "bwted.hpp"
 
-char alphabet[256];
+const int alphalength = 256;
+char alphabet[alphalength];
 
 void BWTenc(char* input, int length){
 
@@ -11,13 +12,26 @@ void BWTenc(char* input, int length){
 
 
 
+int getIndexAndMoveToFront(char c){
+
+	int index = -1;
+	for(int i=0; i<alphalength;i++){
+		if(alphabet[i]!=c) {continue;}
+		index=i;
+	}
+
+	return index;
+}
 
 void MTFenc(char* input, int length){
 	printf("%s (%d)\n", input,length);
-	for(int i=0; i<256;i++){
+	for(int i=0; i<alphalength;i++){
 		alphabet[i] = (unsigned char) i;
 		printf("%c", alphabet[i]);
 	}
+	printf("\n");
+
+	printf("%d\n", getIndexAndMoveToFront('ab'));
 }
 
 
