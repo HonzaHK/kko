@@ -3,8 +3,7 @@
 
 #include "bwted.hpp"
 
-const int alphalength = 26;
-const int ascii_first_index =65;
+const int alphalength = 256;
 char alphabet[alphalength];
 
 void BWTenc(char* input, int length){
@@ -13,7 +12,7 @@ void BWTenc(char* input, int length){
 
 void initAlphabet(){
 	for(int i=0; i<alphalength;i++){
-		alphabet[i] = (unsigned char) ascii_first_index + i;
+		alphabet[i] = (unsigned char) i;
 	}
 }
 
@@ -47,12 +46,23 @@ int getCharIndexAndMoveToFront(char c){
 }
 
 void MTFenc(char* input, int length){
-	printf("%s (%d)\n", input,length);
 
 	initAlphabet();
-	printAlphabet();
-	printf("%d\n", getCharIndexAndMoveToFront('M'));
-	printAlphabet();
+
+	for(int i=0; i<length; i++){
+		int index = getCharIndexAndMoveToFront(input[i]);
+		input[i]=index;
+	}
+}
+
+void MTFdec(char* input, int length){
+
+	initAlphabet();
+
+	for(int i=0;i<length; i++){
+		input[i] = alphabet[input[i]];
+		getCharIndexAndMoveToFront(input[i]);
+	}
 }
 
 
@@ -79,10 +89,16 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 		input[length] = '\0';
 	}
 
-	printf("input: %s\n", input);
+	printf("START:\n");
+	printf("%s (%d)\n", input, length);
 
-
+	printf("MTFenc\n");
 	MTFenc(input,length);
+	printf("%s (%d)\n", input, length);
+
+	printf("MTFdec\n");
+	MTFdec(input,length);
+	printf("%s (%d)\n", input, length);
 	return 0;
 
 
