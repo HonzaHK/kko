@@ -3,35 +3,56 @@
 
 #include "bwted.hpp"
 
-const int alphalength = 256;
+const int alphalength = 26;
+const int ascii_first_index =65;
 char alphabet[alphalength];
 
 void BWTenc(char* input, int length){
 
 }
 
+void initAlphabet(){
+	for(int i=0; i<alphalength;i++){
+		alphabet[i] = (unsigned char) ascii_first_index + i;
+	}
+}
 
+void printAlphabet(){
+	for(int i=0; i<alphalength;i++){
+		printf("%c", alphabet[i]);
+	}
+	printf("\n");
+}
 
-int getIndexAndMoveToFront(char c){
+//finds alphabet index of a char and moves the character to the front of the alphabet
+int getCharIndexAndMoveToFront(char c){
 
+	//first, record index of character
 	int index = -1;
 	for(int i=0; i<alphalength;i++){
 		if(alphabet[i]!=c) {continue;}
 		index=i;
 	}
 
+
+	//next, move the alphabet (upo to index)
+	for(int i=index; i>0; i--){
+		alphabet[i] = alphabet[i-1];
+	}
+
+	//finaly, insert the character at the beginning
+	alphabet[0] = c;
+
 	return index;
 }
 
 void MTFenc(char* input, int length){
 	printf("%s (%d)\n", input,length);
-	for(int i=0; i<alphalength;i++){
-		alphabet[i] = (unsigned char) i;
-		printf("%c", alphabet[i]);
-	}
-	printf("\n");
 
-	printf("%d\n", getIndexAndMoveToFront('ab'));
+	initAlphabet();
+	printAlphabet();
+	printf("%d\n", getCharIndexAndMoveToFront('M'));
+	printAlphabet();
 }
 
 
