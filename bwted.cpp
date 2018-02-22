@@ -161,8 +161,6 @@ void RLEdec(t_str_len input, t_str_len* output){
 	}
 }
 
-
-
 int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	printf("BWTEncoding...\n");
 		
@@ -191,52 +189,52 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	// MTFdec(input,length);
 	// printf("%s (%d)\n", input, length);
 
-	printf("RLEenc\n");
-	RLEenc(input,&output);
-	printRleCode(output);
+	// printf("RLEenc\n");
+	// RLEenc(input,&output);
+	// printRleCode(output);
 
-	t_str_len_copy(output,&input);
-	t_str_len_clear(&output);
-	printf("RLEdec\n");
-	RLEdec(input,&output);
-	t_str_len_print(output);
+	// t_str_len_copy(output,&input);
+	// t_str_len_clear(&output);
+	// printf("RLEdec\n");
+	// RLEdec(input,&output);
+	// t_str_len_print(output);
 
-	t_str_len_clear(&input);
-	t_str_len_clear(&output);
+	// t_str_len_clear(&input);
+	// t_str_len_clear(&output);
 
 
+
+	//alocate memory for the permutations
+	t_str_len* perms = (t_str_len*) malloc(input.len*sizeof(t_str_len));
+	for(int i=0;i<input.len;i++){
+		perms[i].ptr = (char*) malloc(input.len*sizeof(char));
+		perms[i].len = input.len;
+	}
+		
+	//the first permutation is the input
+	strncpy(perms[0].ptr,input.ptr,input.len);
+
+	//now rotate to get succeeding permutations
+	for(int i=1;i<input.len;i++){
+		for(int j=0;j<input.len;j++){
+			perms[i].ptr[j] = perms[i-1].ptr[j-1<0 ? input.len-1 : j-1];
+		}
+	}
+
+	//now sort the permutations lexicographicaly
+	for(int i=0;i<input.len;i++){
+		t_str_len_print(perms[i]);
+	}
+
+
+	
+	//free memory used
+	for(int i=0;i<input.len;i++){
+		free(perms[i].ptr);
+	}
+	free(perms);
+	free(input.ptr);
 	return 0;
-
-
-
-	// char** perms = (char**) malloc(length*sizeof(char*));
-	// for(int i=0;i<length;i++){
-	// 	perms[i] = (char*) malloc((length+1)*sizeof(char));
-	// 	strncpy(perms[i],input,length);
-	// 	perms[i][length] = '\0';
-	// }
-
-	// for(int i=1;i<length;i++){
-	// 	for(int j=0;j<length;j++){
-	// 		perms[i][j] = perms[i-1][j-1<0 ? length-1 : j-1];
-	// 	}
-	// }
-
-	
-	// for(int i=0;i<length;i++){
-	// 	printf("%s\n", perms[i]);
-	// }
-	
-
-
-
-	// for(int i=0;i<length;i++){
-	// 	free(perms[i]);
-	// }
-	// free(perms);
-	// free(input);
-
-
 
 
 	return 0;

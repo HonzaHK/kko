@@ -17,7 +17,7 @@ run: exe
 
 memtest: exe
 	@echo "--EXECUTE----------------------------------------------------"
-	@valgrind --leak-check=full --show-leak-kinds=all -v ./${EXE} -i test/banana.txt -o test/test_out.txt -l test/test_log.txt -c
+	@valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes -v ./${EXE} -i test/banana.txt -o test/test_out.txt -l test/test_log.txt -c
 
 
 clean:
