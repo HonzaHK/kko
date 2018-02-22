@@ -161,6 +161,23 @@ void RLEdec(t_str_len input, t_str_len* output){
 	}
 }
 
+
+
+//qsort comparator function for comparing two strings
+int comp(const void* elem1, const void* elem2){
+    t_str_len e1 = *((t_str_len*)elem1);
+    t_str_len e2 = *((t_str_len*)elem2);
+
+    //decide on the first different character
+    for(int i=0; i<e1.len; i++){
+    	if(e1.ptr[i]>e2.ptr[i]){return 1;}
+    	else if(e1.ptr[i]<e2.ptr[i]){return -1;}
+    	else {continue;}
+    }
+
+    return 0;
+}
+
 int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	printf("BWTEncoding...\n");
 		
@@ -222,6 +239,9 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	}
 
 	//now sort the permutations lexicographicaly
+    qsort (perms, input.len, sizeof(t_str_len), comp);
+
+
 	for(int i=0;i<input.len;i++){
 		t_str_len_print(perms[i]);
 	}
