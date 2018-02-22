@@ -34,10 +34,6 @@ void t_str_len_print(t_str_len s){
 const int alphalength = 256;
 char alphabet[alphalength];
 
-void BWTenc(char* input, int length){
-
-}
-
 void initAlphabet(){
 	for(int i=0; i<alphalength;i++){
 		alphabet[i] = (unsigned char) i;
@@ -178,8 +174,48 @@ int comp(const void* elem1, const void* elem2){
     return 0;
 }
 
+
+void BWTenc(t_str_len input,t_str_len* output){
+
+	//alocate memory for the permutations
+	t_str_len* perms = (t_str_len*) malloc(input.len*sizeof(t_str_len));
+	for(int i=0;i<input.len;i++){
+		perms[i].ptr = (char*) malloc(input.len*sizeof(char));
+		perms[i].len = input.len;
+	}
+		
+	//the first permutation is the input
+	strncpy(perms[0].ptr,input.ptr,input.len);
+
+	//now rotate to get succeeding permutations
+	for(int i=1;i<input.len;i++){
+		for(int j=0;j<input.len;j++){
+			perms[i].ptr[j] = perms[i-1].ptr[j-1<0 ? input.len-1 : j-1];
+		}
+	}
+
+	//now sort the permutations lexicographicaly
+    qsort (perms, input.len, sizeof(t_str_len), comp);
+
+	//allocate memory for output
+	output->ptr = (char*) malloc(input.len*sizeof(char));
+
+	//output consists of last char of each permutation after sort
+	for(int i=0;i<input.len;i++){
+		output->ptr[i] = perms[i].ptr[perms[i].len-1];
+		output->len++;
+	}
+	
+	//free memory used
+	for(int i=0;i<input.len;i++){
+		free(perms[i].ptr);
+	}
+	free(perms);
+}
+
+
+
 int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
-	printf("BWTEncoding...\n");
 		
 	if(ifile==NULL){
 		return -1;
@@ -195,8 +231,6 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	if (input.ptr){
 		fread (input.ptr, 1, input.len, ifile);
 	}
-
-	t_str_len_print(input);
 
 	// printf("MTFenc\n");
 	// MTFenc(input,length);
@@ -219,42 +253,12 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	// t_str_len_clear(&input);
 	// t_str_len_clear(&output);
 
+	BWTenc(input,&output);
+
+	t_str_len_print(output);
 
 
-	//alocate memory for the permutations
-	t_str_len* perms = (t_str_len*) malloc(input.len*sizeof(t_str_len));
-	for(int i=0;i<input.len;i++){
-		perms[i].ptr = (char*) malloc(input.len*sizeof(char));
-		perms[i].len = input.len;
-	}
-		
-	//the first permutation is the input
-	strncpy(perms[0].ptr,input.ptr,input.len);
-
-	//now rotate to get succeeding permutations
-	for(int i=1;i<input.len;i++){
-		for(int j=0;j<input.len;j++){
-			perms[i].ptr[j] = perms[i-1].ptr[j-1<0 ? input.len-1 : j-1];
-		}
-	}
-
-	//now sort the permutations lexicographicaly
-    qsort (perms, input.len, sizeof(t_str_len), comp);
-
-
-	for(int i=0;i<input.len;i++){
-		t_str_len_print(perms[i]);
-	}
-
-
-	
-	//free memory used
-	for(int i=0;i<input.len;i++){
-		free(perms[i].ptr);
-	}
-	free(perms);
 	free(input.ptr);
-	return 0;
 
 
 	return 0;
