@@ -9,7 +9,7 @@ lib:
 
 exe: lib
 	@echo "--COMPILE EXE------------------------------------------------"
-	@${CC} ${CFLAGS} main.cpp bwted.cpp bwted.hpp -o ${EXE}
+	@${CC} ${CFLAGS} *.cpp *.hpp -o ${EXE}
 
 run: exe
 	@echo "--EXECUTE----------------------------------------------------"
