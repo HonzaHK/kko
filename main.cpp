@@ -77,7 +77,7 @@ int main(int argc, char* argv[]){
 	}
 	else if(clargs.mode==decode){
 		int res = BWTDecoding(&record,ifile,ofile);
-		printf("decode\n");
+		printf("decode: %d\n",res);
 	}
 
 	fclose(ifile);

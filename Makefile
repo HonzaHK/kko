@@ -13,7 +13,7 @@ exe: lib
 
 run: exe
 	@echo "--EXECUTE----------------------------------------------------"
-	@./${EXE} ${args} -o test/test_out.txt -l test/test_log.txt -c
+	@./${EXE} ${args} -l test/test_log.txt
 
 memtest: exe
 	@echo "--EXECUTE----------------------------------------------------"
@@ -21,7 +21,7 @@ memtest: exe
 
 
 clean:
-	rm -rf ${EXE} test/*_out.txt
+	rm -rf ${EXE} test/*.out.txt
 
 zip:
 	echo zip

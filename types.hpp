@@ -8,7 +8,6 @@ typedef struct {
 	int len=0;
 } t_str_len;
 
-#endif
 
 
 
@@ -17,3 +16,12 @@ void t_str_len_clear(t_str_len*);
 void t_str_len_copy(t_str_len, t_str_len*);
 
 void t_str_len_print(t_str_len);
+
+
+
+
+
+
+
+
+#endif

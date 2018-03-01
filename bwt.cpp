@@ -19,55 +19,54 @@ int comp_strings(const void* elem1, const void* elem2){
 }
 
 
-void BWTenc(t_str_len input,t_str_len* output){
+int BWTenc(char* input, int input_len, char* output){
 
 	//alocate memory for the permutations
-	t_str_len* perms = (t_str_len*) malloc(input.len*sizeof(t_str_len));
-	for(int i=0;i<input.len;i++){
-		perms[i].ptr = (char*) malloc(input.len*sizeof(char));
-		perms[i].len = input.len;
+	t_str_len* perms = (t_str_len*) malloc(input_len*sizeof(t_str_len));
+	for(int i=0;i<input_len;i++){
+		perms[i].ptr = (char*) malloc(input_len*sizeof(char));
+		perms[i].len = input_len;
 	}
 		
 	//the first permutation is the input
-	strncpy(perms[0].ptr,input.ptr,input.len);
+	strncpy(perms[0].ptr,input,input_len);
 
 	//now rotate to get succeeding permutations
-	for(int i=1;i<input.len;i++){
-		for(int j=0;j<input.len;j++){
-			perms[i].ptr[j] = perms[i-1].ptr[j-1<0 ? input.len-1 : j-1];
+	for(int i=1;i<input_len;i++){
+		for(int j=0;j<input_len;j++){
+			perms[i].ptr[j] = perms[i-1].ptr[j-1<0 ? input_len-1 : j-1];
 		}
 	}
 
 	//now sort the permutations lexicographicaly
-    qsort (perms, input.len, sizeof(t_str_len), comp_strings);
+    qsort (perms, input_len, sizeof(t_str_len), comp_strings);
 
     //find the index of original string among sorted
     //todo: works only for 256 permutations?
     uint8_t orig_index=-1;
-    for(int i=0;i<input.len;i++){
-    	if(strcmp(input.ptr,perms[i].ptr)==0){
+    for(int i=0;i<input_len;i++){
+    	if(strcmp(input,perms[i].ptr)==0){
     		orig_index=i;
     	}
     }
 
-	//allocate memory for output (+1 for storing the original string index)
-	output->ptr = (char*) malloc(input.len*sizeof(char)+1);
 
 	//output consists of last char of each permutation after sort
-	for(int i=0;i<input.len;i++){
-		output->ptr[i] = perms[i].ptr[perms[i].len-1];
-		output->len++;
+	for(int i=0;i<input_len;i++){
+		output[i] = perms[i].ptr[perms[i].len-1];
 	}
 
 	//store the original string index
-	output->ptr[input.len] = orig_index;
-	output->len++;
+	output[input_len] = orig_index;
+	int output_len = input_len +1;
 	
 	//free memory used
-	for(int i=0;i<input.len;i++){
+	for(int i=0;i<input_len;i++){
 		free(perms[i].ptr);
 	}
 	free(perms);
+
+	return output_len;
 }
 
 
@@ -82,30 +81,31 @@ int comp_chars(const void* elem1, const void* elem2){
 }
 
 
-void BWTdec(t_str_len input, t_str_len* output){
+int BWTdec(char* input, int input_len, char* output){
+	
+	uint8_t orig_index = (uint8_t)input[input_len-1];
+	input_len--; //remove the last char (orig index)
 
-	int orig_index = input.ptr[input.len-1];
-	input.len--; //remove the last char (orig index)
-
-	t_str_len sorted;
-	t_str_len_copy(input,&sorted);
-	qsort(sorted.ptr, sorted.len, sizeof(char), comp_chars);
+	char* sorted;
+	sorted = (char*) malloc(input_len*sizeof(char));
+	strncpy(sorted,input,input_len);
+	qsort(sorted, input_len, sizeof(char), comp_chars);
 
 	int alfa = orig_index;
-	int cnt_found = 0;
+	int output_len = 0;
 	while(true){
-		char fa = sorted.ptr[alfa];
-		printf("%c\n", fa);
-		cnt_found++;
+		char fa = sorted[alfa];
+		output[output_len] = fa;
+		output_len++;
 
 		int occurence = 0;
 		for(int i=0;i<alfa;i++){
-			if(sorted.ptr[i]==fa){occurence++;}
+			if(sorted[i]==fa){occurence++;}
 		}
 
 		int nextAlfa=-1;
-		for(int i=0;i<input.len;i++){
-			if(input.ptr[i]!=fa){continue;}
+		for(int i=0;i<input_len;i++){
+			if(input[i]!=fa){continue;}
 			if(occurence==0){
 
 			nextAlfa=i;
@@ -115,8 +115,8 @@ void BWTdec(t_str_len input, t_str_len* output){
 		}
 		
 		alfa=nextAlfa;
-		if(cnt_found==input.len) break;
+		if(output_len==input_len) break;
 	}
 
-
+	return output_len;
 }

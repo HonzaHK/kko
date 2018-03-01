@@ -10,75 +10,51 @@
 #include "rle.hpp"
 #include "huf.hpp"
 
-#define MTF_BUFFER_SIZE 1024
-#define RLE_BUFFER_SIZE 1024
-char rle_buffer[RLE_BUFFER_SIZE];
 
 
+#define INPUT_BLOCK_SIZE 64
+
+//BWT does not modify the length of input; index of original permutation is added (size+=1)
+//MTF does not modify the length of input
+//RLE at the worst case the length*=2; the real length (usually shorter) is stored inside (size = size*2 + 1)
+#define MAX_BLOCK_SIZE ((INPUT_BLOCK_SIZE+1)*2 +1)
+
+//create buffers for separate (bwt,mtf,rle) transformations
+char block_a[MAX_BLOCK_SIZE];
+char block_b[MAX_BLOCK_SIZE];
 
 
 
 int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
-		
-	if(ifile==NULL){
+	
+	if(ifile==NULL || ofile==NULL){
+		return -1;
+	}
+	
+	rewind(ifile);
+
+
+	if(rec==NULL){
 		return -1;
 	}
 
-	fseek (ifile, 0, SEEK_END);
-	int filelen = ftell (ifile);
-	rewind(ifile);
-	
-	t_str_len input;
-	t_str_len output;
-
-	// input.len = filelen;
-	// if((input.ptr = (char*) malloc((25000)*sizeof(char))) == NULL){ 
-	// 	return -1;
-	// };
-
-	// input.len = 25000;
-
-
-
 	int bytes_read = 0;
-	while((bytes_read=fread(input.ptr, 1, 1024, ifile)) > 0){
-		RLEenc(input,&output);
+	while((bytes_read=fread(block_a, 1, INPUT_BLOCK_SIZE, ifile)) > 0){
+
+		//input/output buffers are overdimensioned for the worst case
+		//in block_real_size we will store the real size of encoded/decoded block in each step
+		int block_real_size = bytes_read;
+
+		//perform bwt encoding
+		block_real_size = BWTenc(block_a, block_real_size, block_b);
+
+		//perform mtf encoding (string has length+1 - it has stored index of orig permutation)
+		block_real_size = MTFenc(block_b,block_real_size);
+
+		// MTFprint(block_b,block_real_size);
+		//save to file
+		fwrite(block_b,sizeof(char),block_real_size*sizeof(char),ofile);
 	}
-
-	
-
-
-
-	// MTFenc(input);
-	// MTFprint(input);
-
-	// MTFdec(input);
-	// t_str_len_print(input);
-
-	// printf("RLEenc\n");
-	// RLEenc(input,&output);
-	// printRleCode(output);
-
-	// t_str_len_copy(output,&input);
-	// t_str_len_clear(&output);
-	// printf("RLEdec\n");
-	// RLEdec(input,&output);
-	// t_str_len_print(output);
-
-	// t_str_len_clear(&input);
-	// t_str_len_clear(&output);
-
-	// BWTenc(input,&output);
-	// t_str_len_print(output);
-	// BWTdec(output,&input);
-
-	// HUFenc(input,&output);
-	// HUFdec(input,&output);
-
-
-
-	free(input.ptr);
-
 
 	return 0;
 }
@@ -86,30 +62,35 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 
 int BWTDecoding (tBWTED *rec, FILE *ifile, FILE *ofile){
 	
-	if(ifile==NULL){
+	if(ifile==NULL || ofile==NULL){
 		return -1;
 	}
 
-	fseek (ifile, 0, SEEK_END);
-	int filelen = ftell (ifile);
-	fseek (ifile, 0, SEEK_SET);
-	
-	t_str_len input;
-	t_str_len output;
+	rewind(ifile);
 
-	input.len = filelen;
-	if((input.ptr = (char*) malloc((input.len)*sizeof(char))) == NULL){ 
+
+	if(rec==NULL){
 		return -1;
-	};
+	}
 
 	int bytes_read = 0;
-	while((bytes_read=fread(input.ptr, 1, 25000, ifile)) > 0){
-		printf("%d\n", bytes_read);
+	while((bytes_read=fread(block_a, 1, INPUT_BLOCK_SIZE+1, ifile)) > 0){
+
+		//input/output buffers are overdimensioned for the worst case
+		//in block_real_size we will store the real size of encoded/decoded block in each step
+		int block_real_size = bytes_read;
+
+		//perform mtf decoding
+		block_real_size = MTFdec(block_a,bytes_read);
+		
+		//perform bwt decoding
+		block_real_size = BWTdec(block_a,bytes_read,block_b);
+
+
+		//save to file
+		fwrite(block_b,sizeof(char),block_real_size*sizeof(char),ofile);
 	}
 
 
-
-
-	free(input.ptr);
 	return 0;
 }

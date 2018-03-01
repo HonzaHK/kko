@@ -1,5 +1,5 @@
 #include "types.hpp"
 
-void BWTenc(t_str_len, t_str_len*);
+int BWTenc(char*, int, char*);
 
-void BWTdec(t_str_len, t_str_len*);
+int BWTdec(char*, int, char*);

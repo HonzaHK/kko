@@ -61,20 +61,20 @@ int freq_comp(const void* elem1, const void* elem2){
     return 0;
 }
 
-void HUFenc(t_str_len input, t_str_len* output){
+// void HUFenc(t_str_len input, t_str_len* output){
 
-	t_freq_table freq_table;
-	freq_table.ptr = NULL;
-	freq_table.size = 0;
+// 	t_freq_table freq_table;
+// 	freq_table.ptr = NULL;
+// 	freq_table.size = 0;
 	
 
-	freq_table_calc(&freq_table,input);
+// 	freq_table_calc(&freq_table,input);
 
-    qsort (freq_table.ptr, freq_table.size, sizeof(t_freq_record), freq_comp);
+//     qsort (freq_table.ptr, freq_table.size, sizeof(t_freq_record), freq_comp);
 
-	freq_table_print(freq_table);
-}
+// 	freq_table_print(freq_table);
+// }
 
-void HUFdec(t_str_len input, t_str_len* output){
+// void HUFdec(t_str_len input, t_str_len* output){
 	
-}
+// }

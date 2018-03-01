@@ -1,7 +1,7 @@
 #include "types.hpp"
 
-void MTFprint(t_str_len);
+void MTFprint(char*, int);
 
-void MTFenc(t_str_len);
+int MTFenc(char*, int);
 
-void MTFdec(t_str_len);
+int MTFdec(char*, int);

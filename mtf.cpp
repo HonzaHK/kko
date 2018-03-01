@@ -7,7 +7,6 @@ const int alphalength = 256;
 char alphabet[alphalength];
 
 void initAlphabet(){
-
 	for(int i=0; i<alphalength;i++){
 		alphabet[i] = (unsigned char) i;
 	}
@@ -20,9 +19,9 @@ void printAlphabet(){
 	printf("\n");
 }
 
-void MTFprint(t_str_len input){
-	for(int i=0; i<input.len; i++){
-		printf("%d ", input.ptr[i]);
+void MTFprint(char* input, int input_len){
+	for(int i=0; i<input_len; i++){
+		printf("%d ", input[i]);
 	}
 	printf("\n");
 }
@@ -37,7 +36,6 @@ int getCharIndexAndMoveToFront(char c){
 		index=i;
 	}
 
-
 	//next, move the alphabet (upo to index)
 	for(int i=index; i>0; i--){
 		alphabet[i] = alphabet[i-1];
@@ -49,22 +47,26 @@ int getCharIndexAndMoveToFront(char c){
 	return index;
 }
 
-void MTFenc(t_str_len input){
+int MTFenc(char* input, int input_len){
 
 	initAlphabet();
-	for(int i=0; i<input.len; i++){
-		printf("%d\n",i );
-		int index = getCharIndexAndMoveToFront(input.ptr[i]);
-		input.ptr[i]=index;
+	for(int i=0; i<input_len; i++){
+		int index = getCharIndexAndMoveToFront(input[i]);
+		input[i]=index;
 	}
+
+	//mtf does not modify the length of input
+	return input_len;
 }
 
-void MTFdec(t_str_len input){
+int MTFdec(char* input,int input_len){
 
 	initAlphabet();
 
-	for(int i=0;i<input.len; i++){
-		input.ptr[i] = alphabet[(int)input.ptr[i]];
-		getCharIndexAndMoveToFront(input.ptr[i]);
+	for(int i=0;i<input_len; i++){
+		input[i] = alphabet[(int)input[i]];
+		getCharIndexAndMoveToFront(input[i]);
 	}
+
+	return input_len;
 }
