@@ -25,6 +25,7 @@ void RLEenc(t_str_len input, t_str_len* output){
 
 	for(int i=1; i<input.len; i++){
 
+		//todo: cnt==256
 		if(input.ptr[i]==lastChar){
 			cnt++;
 			continue;

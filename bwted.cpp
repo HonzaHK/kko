@@ -10,6 +10,12 @@
 #include "rle.hpp"
 #include "huf.hpp"
 
+#define MTF_BUFFER_SIZE 1024
+#define RLE_BUFFER_SIZE 1024
+char rle_buffer[RLE_BUFFER_SIZE];
+
+
+
 
 
 int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
@@ -18,24 +24,36 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 		return -1;
 	}
 
+	fseek (ifile, 0, SEEK_END);
+	int filelen = ftell (ifile);
+	rewind(ifile);
+	
 	t_str_len input;
 	t_str_len output;
 
-	fseek (ifile, 0, SEEK_END);
-	input.len = ftell (ifile);
-	fseek (ifile, 0, SEEK_SET);
-	input.ptr = (char*) malloc((input.len)*sizeof(char));
-	if (input.ptr){
-		fread (input.ptr, 1, input.len, ifile);
+	// input.len = filelen;
+	// if((input.ptr = (char*) malloc((25000)*sizeof(char))) == NULL){ 
+	// 	return -1;
+	// };
+
+	// input.len = 25000;
+
+
+
+	int bytes_read = 0;
+	while((bytes_read=fread(input.ptr, 1, 1024, ifile)) > 0){
+		RLEenc(input,&output);
 	}
 
-	// printf("MTFenc\n");
+	
+
+
+
 	// MTFenc(input);
 	// MTFprint(input);
 
-	// printf("MTFdec\n");
 	// MTFdec(input);
-	// printf("%s (%d)\n", input.ptr, input.len);
+	// t_str_len_print(input);
 
 	// printf("RLEenc\n");
 	// RLEenc(input,&output);
@@ -54,8 +72,8 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 	// t_str_len_print(output);
 	// BWTdec(output,&input);
 
-	HUFenc(input,&output);
-	HUFdec(input,&output);
+	// HUFenc(input,&output);
+	// HUFdec(input,&output);
 
 
 
@@ -66,7 +84,32 @@ int BWTEncoding (tBWTED* rec, FILE* ifile, FILE* ofile){
 }
 
 
-int BWTDecoding (tBWTED *, FILE *, FILE *){
-	printf("BWTDecoding...\n");
+int BWTDecoding (tBWTED *rec, FILE *ifile, FILE *ofile){
+	
+	if(ifile==NULL){
+		return -1;
+	}
+
+	fseek (ifile, 0, SEEK_END);
+	int filelen = ftell (ifile);
+	fseek (ifile, 0, SEEK_SET);
+	
+	t_str_len input;
+	t_str_len output;
+
+	input.len = filelen;
+	if((input.ptr = (char*) malloc((input.len)*sizeof(char))) == NULL){ 
+		return -1;
+	};
+
+	int bytes_read = 0;
+	while((bytes_read=fread(input.ptr, 1, 25000, ifile)) > 0){
+		printf("%d\n", bytes_read);
+	}
+
+
+
+
+	free(input.ptr);
 	return 0;
 }

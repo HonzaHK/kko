@@ -52,8 +52,8 @@ int getCharIndexAndMoveToFront(char c){
 void MTFenc(t_str_len input){
 
 	initAlphabet();
-
 	for(int i=0; i<input.len; i++){
+		printf("%d\n",i );
 		int index = getCharIndexAndMoveToFront(input.ptr[i]);
 		input.ptr[i]=index;
 	}
