@@ -3,6 +3,28 @@
 #include <stdint.h>
 #include "bwt.hpp"
 
+
+void bwt_print(char* input, int input_len){
+
+	for(int i=0;i<input_len-1;i++){
+		printf("%d.", input[i]);
+	}
+
+	printf(" [alpha=%d]\n", input[input_len-1]);
+}
+
+void print_perms(t_str_len* perms, int cnt_perms){
+    printf("PERMS--------------\n");
+    for(int i=0;i<cnt_perms;i++){
+    	for(int j=0;j<perms[i].len;j++){
+    		printf("%d ", perms[i].ptr[j]);
+    	}
+    	printf("\n");
+    }
+    printf("-------------------\n");
+}
+
+
 //qsort comparator function for comparing two strings
 int comp_strings(const void* elem1, const void* elem2){
     t_str_len e1 = *((t_str_len*)elem1);
@@ -18,6 +40,20 @@ int comp_strings(const void* elem1, const void* elem2){
     return 0;
 }
 
+bool str_equal(char* str1, int str1_len, char* str2, int str2_len){
+	
+	if(str1_len!=str2_len){
+		return false;
+	}
+
+	for(int i=0; i<str1_len; i++){
+		if(str1[i]!=str2[i]){
+			return false;
+		}
+	}
+
+	return true;
+}
 
 int BWTenc(char* input, int input_len, char* output){
 
@@ -29,7 +65,9 @@ int BWTenc(char* input, int input_len, char* output){
 	}
 		
 	//the first permutation is the input
-	strncpy(perms[0].ptr,input,input_len);
+	for(int i=0; i<input_len; i++){
+		perms[0].ptr[i] = input[i];
+	}
 
 	//now rotate to get succeeding permutations
 	for(int i=1;i<input_len;i++){
@@ -45,7 +83,7 @@ int BWTenc(char* input, int input_len, char* output){
     //todo: works only for 256 permutations?
     uint8_t orig_index=-1;
     for(int i=0;i<input_len;i++){
-    	if(strcmp(input,perms[i].ptr)==0){
+    	if(str_equal(input, input_len, perms[i].ptr, perms[i].len)){
     		orig_index=i;
     	}
     }
@@ -88,7 +126,10 @@ int BWTdec(char* input, int input_len, char* output){
 
 	char* sorted;
 	sorted = (char*) malloc(input_len*sizeof(char));
-	strncpy(sorted,input,input_len);
+	for(int i=0; i<input_len; i++){
+		sorted[i] = input[i];
+	}
+
 	qsort(sorted, input_len, sizeof(char), comp_chars);
 
 	int alfa = orig_index;

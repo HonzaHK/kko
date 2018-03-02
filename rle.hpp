@@ -1,7 +1,7 @@
 #include "types.hpp"
 
-void printRleCode(t_str_len);
+void RLEprint(char*, int);
 
-void RLEenc(t_str_len, t_str_len*);
+int RLEenc(char*, int, char*);
 
-void RLEdec(t_str_len, t_str_len*);
+int RLEdec(char*, int, char*);

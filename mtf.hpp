@@ -1,6 +1,6 @@
 #include "types.hpp"
 
-void MTFprint(char*, int);
+void mtf_print(char*, int);
 
 int MTFenc(char*, int);
 

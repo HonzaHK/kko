@@ -19,9 +19,9 @@ void printAlphabet(){
 	printf("\n");
 }
 
-void MTFprint(char* input, int input_len){
+void mtf_print(char* input, int input_len){
 	for(int i=0; i<input_len; i++){
-		printf("%d ", input[i]);
+		printf("%d.", input[i]);
 	}
 	printf("\n");
 }
