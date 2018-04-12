@@ -15,7 +15,7 @@ run: exe
 	@echo "--EXECUTE----------------------------------------------------"
 	@./${EXE} -c -i test/test.txt -o test/test_enc.out.txt -l test/test_log.txt
 	@./${EXE} -x -i test/test_enc.out.txt -o test/test_dec.out.txt -l test/test_log.txt
-	diff test/test.txt test/test_dec.out.txt
+	# diff test/test.txt test/test_dec.out.txt
 
 memtest: exe
 	@echo "--EXECUTE----------------------------------------------------"

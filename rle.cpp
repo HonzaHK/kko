@@ -23,7 +23,7 @@ int RLEenc(char* input, int input_len, char* output){
 	char lastChar = input[0];
 	uint8_t cnt = 1;
 
-	uint8_t output_len = 0;
+	uint16_t output_len = 0;
 	for(int i=1; i<input_len; i++){
 
 		//todo: cnt==256
@@ -48,14 +48,17 @@ int RLEenc(char* input, int input_len, char* output){
 	output[output_len+1] = input[input_len-1];
 	output_len+=2;
 
-	//shift all bytes right
-	output_len+=1;
+	//shift all bytes 2 positions right
+	output_len+=2;
 	for(int i=output_len-1;i>0;i--){
-		output[i] = output[i-1];
+		output[i] = output[i-2];
 	}
 
 	//store the real block size to the beggining of encoded string (do not count this byte)
-	output[0] = output_len-1;
+	uint16_t rle_code_len = output_len-2;
+	//todo: little/big endian
+	output[0] = rle_code_len & 0xFF;
+	output[1] = rle_code_len >> 8;
 
 	return output_len;
 }

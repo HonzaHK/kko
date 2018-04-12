@@ -81,7 +81,7 @@ int BWTenc(char* input, int input_len, char* output){
 
     //find the index of original string among sorted
     //todo: works only for 256 permutations?
-    uint8_t orig_index=-1;
+    uint16_t orig_index=-1;
     for(int i=0;i<input_len;i++){
     	if(str_equal(input, input_len, perms[i].ptr, perms[i].len)){
     		orig_index=i;
@@ -95,9 +95,12 @@ int BWTenc(char* input, int input_len, char* output){
 	}
 
 	//store the original string index
-	output[input_len] = orig_index;
-	int output_len = input_len +1;
+	//todo: little/big endian
+	int output_len = input_len + 2;
+	output[output_len-2] = orig_index & 0xFF;
+	output[output_len-1] = orig_index >> 8;
 	
+	// printf(">>%d\n", orig_index);
 	//free memory used
 	for(int i=0;i<input_len;i++){
 		free(perms[i].ptr);
@@ -121,8 +124,10 @@ int comp_chars(const void* elem1, const void* elem2){
 
 int BWTdec(char* input, int input_len, char* output){
 	
-	uint8_t orig_index = (uint8_t)input[input_len-1];
-	input_len--; //remove the last char (orig index)
+	//todo: little/big endian
+	uint16_t orig_index = (input[input_len-2] & 0xFF) | (uint16_t) input[input_len-1] << 8;
+	input_len-=2; //remove the last two bytes (orig index)
+
 
 	char* sorted;
 	sorted = (char*) malloc(input_len*sizeof(char));
