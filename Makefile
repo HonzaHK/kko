@@ -13,9 +13,11 @@ exe: lib
 
 run: exe
 	@echo "--EXECUTE----------------------------------------------------"
-	@./${EXE} -c -i test/test.txt -o test/test_enc.out.txt -l test/test_log.txt
-	@./${EXE} -x -i test/test_enc.out.txt -o test/test_dec.out.txt -l test/test_log.txt
-	# diff test/test.txt test/test_dec.out.txt
+	@./${EXE} -c -i test/test.txt -o test/test_enc.txt -l test/log_enc.txt
+	@echo "-- encode done ----------------------------------------------"
+	@./${EXE} -x -i test/test_enc.txt -o test/test_dec.txt -l test/log_dec.txt
+	@echo "-- decode done ----------------------------------------------"
+	diff test/test.txt test/test_dec.txt
 
 memtest: exe
 	@echo "--EXECUTE----------------------------------------------------"

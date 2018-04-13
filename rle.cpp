@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include "rle.hpp"
 
+const char rleFlag= (char) 0xFF;
+
 void RLEprint(char* input, int input_len){
 
 	for(int i=1;i<input_len;i++){
@@ -18,24 +20,37 @@ void RLEprint(char* input, int input_len){
 
 int RLEenc(char* input, int input_len, char* output){
 
+	int cnt_packed = 0;
 
 	//init
 	char lastChar = input[0];
 	uint8_t cnt = 1;
 
 	uint16_t output_len = 0;
-	for(int i=1; i<input_len; i++){
+
+	//do not encode last two bytes - these are representing original index of bwt permutation
+	for(int i=1; i<input_len-2; i++){
 
 		//todo: cnt==256
 		if(input[i]==lastChar){
 			cnt++;
 			continue;
 		}
-		else{
-			//write to output;
-			output[output_len] = cnt;
-			output[output_len+1] = input[i-1];
-			output_len+=2;
+		else {
+			if(cnt==1 || cnt==2 || cnt==3){
+				for(int j=0; j<cnt; j++){
+					output[output_len+j] = lastChar;
+				}
+				output_len+=cnt;
+			}
+			else{
+				output[output_len] = rleFlag;
+				output[output_len+1] = cnt;
+				output[output_len+2] = lastChar;
+				output_len+=3;
+				cnt_packed+=1;
+			}
+			
 			//re-init
 			lastChar=input[i];
 			cnt=1;
@@ -44,7 +59,22 @@ int RLEenc(char* input, int input_len, char* output){
 
 	//additionaly encode the last run of symbols
 	//only if input_len>1 ?
-	output[output_len] = cnt;
+	if(cnt==1 || cnt==2 || cnt==3){
+		for(int j=0; j<cnt; j++){
+			output[output_len+j] = lastChar;
+		}
+		output_len+=cnt;
+	}
+	else{
+		output[output_len] = rleFlag;
+		output[output_len+1] = cnt;
+		output[output_len+2] = lastChar;
+		output_len+=3;
+		cnt_packed+=1;
+	}
+
+	//copy original index of bwt permutation bytes (2)
+	output[output_len] = input[input_len-2];
 	output[output_len+1] = input[input_len-1];
 	output_len+=2;
 
@@ -65,17 +95,31 @@ int RLEenc(char* input, int input_len, char* output){
 
 int RLEdec(char* input, int input_len, char* output){
 
+	int cnt_packed=0;
+
 	//decode the runs
 	int output_len=0;
-	for(int i=0; i<input_len; i+=2){
-
-		uint8_t charCnt = input[i];
-		char ch = input[i+1];
-		for(uint8_t j=0; j<charCnt; j++){
-			output[output_len] = ch;
-			output_len++;
+	for(int i=0; i<input_len-2; i++){
+		if(input[i]==rleFlag){
+			cnt_packed+=1;
+			uint8_t cnt = input[i+1];
+			for(uint8_t j=0; j<cnt; j++){
+				output[output_len] = input[i+2];
+				output_len+=1;
+			}
+			i+=2;
+		}
+		else{
+			output[output_len] = input[i];
+			output_len+=1;
 		}
 	}
+
+	//copy original index of bwt permutation bytes (2)
+	output[output_len] = input[input_len-2];
+	output[output_len+1] = input[input_len-1];
+	output_len+=2;
+	
 
 	return output_len;
 }

@@ -4,7 +4,7 @@
 #include "mtf.hpp"
 
 const int alphalength = 256;
-char alphabet[alphalength];
+unsigned char alphabet[alphalength];
 
 void initAlphabet(){
 	for(int i=0; i<alphalength;i++){
@@ -14,27 +14,30 @@ void initAlphabet(){
 
 void printAlphabet(){
 	for(int i=0; i<alphalength;i++){
-		printf("%c", alphabet[i]);
+		printf("%d", alphabet[i]);
 	}
 	printf("\n");
 }
 
 void mtf_print(char* input, int input_len){
 	for(int i=0; i<input_len; i++){
-		printf("%d.", input[i]);
+		printf("%d.", (uint8_t)input[i]);
 	}
 	printf("\n");
 }
 
 //finds alphabet index of a char and moves the character to the front of the alphabet
-int getCharIndexAndMoveToFront(char c){
+uint8_t getCharIndexAndMoveToFront(unsigned char c){
 
+	// printf("char: %d\n",c);
 	//first, record index of character
-	int index = -1;
+	uint8_t index = -1;
 	for(int i=0; i<alphalength;i++){
 		if(alphabet[i]!=c) {continue;}
 		index=i;
 	}
+
+	// printf("index: %d\n", index);
 
 	//next, move the alphabet (upo to index)
 	for(int i=index; i>0; i--){
@@ -64,7 +67,7 @@ int MTFdec(char* input,int input_len){
 	initAlphabet();
 
 	for(int i=0;i<input_len; i++){
-		input[i] = alphabet[(int)input[i]];
+		input[i] = alphabet[(uint8_t)input[i]];
 		getCharIndexAndMoveToFront(input[i]);
 	}
 

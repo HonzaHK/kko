@@ -100,6 +100,7 @@ int BWTenc(char* input, int input_len, char* output){
 	output[output_len-2] = orig_index & 0xFF;
 	output[output_len-1] = orig_index >> 8;
 	
+	// printf("orig_index: %d [%d.%d]\n",orig_index, output[output_len-2],output[output_len-1]);
 	// printf(">>%d\n", orig_index);
 	//free memory used
 	for(int i=0;i<input_len;i++){
@@ -127,7 +128,6 @@ int BWTdec(char* input, int input_len, char* output){
 	//todo: little/big endian
 	uint16_t orig_index = (input[input_len-2] & 0xFF) | (uint16_t) input[input_len-1] << 8;
 	input_len-=2; //remove the last two bytes (orig index)
-
 
 	char* sorted;
 	sorted = (char*) malloc(input_len*sizeof(char));

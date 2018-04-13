@@ -10,9 +10,9 @@ enum emode{ //bwted mode (encode/decode)
 };
 
 typedef struct { //structure for storing command line arguments
-	char* ifName;
-	char* ofName;
-	char* lfName;
+	char* ifName=NULL;
+	char* ofName=NULL;
+	char* lfName=NULL;
 	emode mode = undefined; //user has to specify mode
 
 } clargs_t;
@@ -70,19 +70,25 @@ int main(int argc, char* argv[]){
 	//open output file or set it to stdout
 	FILE* ofile = clargs.ofName!=NULL ? fopen(clargs.ofName,"wb") : stdout;
 	tBWTED record;
+	record.uncodedSize=0;
+	record.codedSize=0;
 
 	if(clargs.mode==encode){
-		int res = BWTEncoding(&record,ifile,ofile);
-		printf("encode: %d\n",res);
+		BWTEncoding(&record,ifile,ofile);
 	}
 	else if(clargs.mode==decode){
-		int res = BWTDecoding(&record,ifile,ofile);
-		printf("decode: %d\n",res);
+		BWTDecoding(&record,ifile,ofile);
 	}
 
 	fclose(ifile);
 	fclose(ofile);
-	// todo: write to logfile, if present
-	// todo: close files
+
+	if(clargs.lfName!=NULL){
+		FILE* lfile = fopen(clargs.lfName,"w");
+		fprintf(lfile, "login = xkubis13\n" );
+		fprintf(lfile, "uncodedSize = %ld\n", record.uncodedSize );
+		fprintf(lfile, "codedSize = %ld\n", record.codedSize );
+	}
+
 	return 0;
 }
