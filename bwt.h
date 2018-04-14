@@ -3,7 +3,7 @@
 //created: 2018/02/23
 //purpose: btw encoding/decoding header file
 
-#include "types.hpp"
+#include "types.h"
 
 int BWTenc(char*, int, char*);
 

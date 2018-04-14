@@ -9,8 +9,8 @@
 #include <stdlib.h>
 
 typedef struct {
-	char* ptr=NULL;
-	int len=0;
+	char* ptr;
+	int len;
 } t_str_len;
 
 

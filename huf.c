@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "huf.hpp"
+#include "huf.h"
 
 typedef struct {
 	char ch;

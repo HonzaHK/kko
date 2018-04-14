@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include "bwt.hpp"
+#include <stdbool.h>
+#include "bwt.h"
 
 
 void bwt_print(char* input, int input_len){
@@ -149,6 +150,7 @@ int BWTdec(char* input, int input_len, char* output){
 		output[output_len] = fa;
 		output_len++;
 
+		//count occurences of this byte in sorted column
 		int occurence = 0;
 		for(int i=0;i<alfa;i++){
 			if(sorted[i]==fa){occurence++;}
@@ -158,8 +160,8 @@ int BWTdec(char* input, int input_len, char* output){
 		for(int i=0;i<input_len;i++){
 			if(input[i]!=fa){continue;}
 			if(occurence==0){
-
-			nextAlfa=i;
+				//find the same occurence in BWTed column; index of permutation that contains it is the next alfa
+				nextAlfa=i;
 				break;
 			}
 			occurence--;

@@ -1,5 +1,5 @@
-CC=g++
-CFLAGS=-std=c++11 -Wall -Wextra -pedantic
+CC=gcc
+CFLAGS=-std=c99 -Wall -Wextra -pedantic
 
 EXE=bwted
 
@@ -9,7 +9,7 @@ lib:
 
 exe: lib
 	@echo "--COMPILE EXE------------------------------------------------"
-	@${CC} ${CFLAGS} *.cpp *.hpp -o ${EXE}
+	@${CC} ${CFLAGS} *.c *.h -o ${EXE}
 
 run: exe
 	@echo "--EXECUTE----------------------------------------------------"
@@ -21,11 +21,11 @@ run: exe
 
 memtest: exe
 	@echo "--EXECUTE----------------------------------------------------"
-	@valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes -v ./${EXE} -i test/banana.txt -o test/test_out.txt -l test/test_log.txt -c
+	@valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes -v ./${EXE} -i test/test.txt -o test/test_enc.txt -l test/test_log.txt -c
 
 
 clean:
 	rm -rf ${EXE} test/*.out.txt
 
 zip:
-	echo zip
+	zip kko.proj2.xkubis13.zip Makefile doc.pdf main.c bwt.c bwt.h bwted.c bwted.h huf.c huf.h mtf.c mtf.h rle.c rle.h types.c types.h

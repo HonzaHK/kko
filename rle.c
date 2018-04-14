@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "rle.hpp"
+#include "rle.h"
 
 const char rleFlag= (char) 0xFF;
 

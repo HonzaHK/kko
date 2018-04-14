@@ -6,19 +6,20 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "mtf.hpp"
+#include "mtf.h"
 
-const int alphalength = 256;
-unsigned char alphabet[alphalength];
+#define ALPHALENGTH 256
+
+unsigned char alphabet[ALPHALENGTH];
 
 void initAlphabet(){
-	for(int i=0; i<alphalength;i++){
+	for(int i=0; i<ALPHALENGTH;i++){
 		alphabet[i] = (unsigned char) i;
 	}
 }
 
 void printAlphabet(){
-	for(int i=0; i<alphalength;i++){
+	for(int i=0; i<ALPHALENGTH;i++){
 		printf("%d", alphabet[i]);
 	}
 	printf("\n");
@@ -37,7 +38,7 @@ uint8_t getCharIndexAndMoveToFront(unsigned char c){
 	// printf("char: %d\n",c);
 	//first, record index of character
 	uint8_t index = -1;
-	for(int i=0; i<alphalength;i++){
+	for(int i=0; i<ALPHALENGTH;i++){
 		if(alphabet[i]!=c) {continue;}
 		index=i;
 	}

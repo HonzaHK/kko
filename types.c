@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "types.hpp"
+#include "types.h"
 
 void t_str_len_clear(t_str_len* s){
 

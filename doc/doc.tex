@@ -1,0 +1,57 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[czech]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[text={17cm,24cm},left=2cm,top=2.5cm]{geometry}
+\usepackage{times}
+\showboxdepth=\maxdimen
+\showboxbreadth=\maxdimen
+\providecommand{\uvoz}[1]{\quotedblbase #1\textquotedblleft}
+\usepackage{enumitem}
+
+\begin{document}
+
+\noindent \textbf{Jméno a příjmení:} Jan Kubiš\\
+\textbf{Login:} xkubis13\\
+\smallskip
+\begin{center}
+	\begin{LARGE}\textbf{Komprese textových souborů s využitím BWT}\end{LARGE}\\
+	\begin{large}(KKO 2017/2018, projekt č.2)\end{large}
+\end{center}
+\bigskip
+
+
+
+\begin{itemize}[leftmargin=0cm]
+\item{\textbf{Obecné}}
+\end{itemize}
+Implementace kódování a dekódování každé z trasformací je umístěna do zvláštního souboru. Vstupním bodem aplikace je soubor main.c, rozhraní knihovny je podle zadání v souboru bwted.c respektive bwted.h. Vstup aplikace je zpracováván po blocích, jejichž délka je snadno nastavitelná. Délka bloku je nastavena na 8192 bytů, což přináší uspokojivý kompromis mezi komprimačním poměrem a výpočetní náročností. Nutno zmínit, že jednotlivé kroky jsou přizpůsobeny především přiloženému testovacímu souboru, respektive jakémukoliv čitelnému ASCII textu.
+
+
+\begin{itemize}[leftmargin=0cm]
+\item{\textbf{Burrows-Wheeler transformation}}
+\end{itemize}
+Při této transformaci je žádoucí, aby byl vstup zpracováván po blocích. Při kódování jsou totiž v paměti vytvořeny všechny permutace vstupu (paměťová náročnost N*N). Tyto permutace jsou následně lexikograficky řazeny algoritmem quicksort (použita implementace ze standartní knihovny), je tedy potřeba brát ohled i na časovou náročnost. Zakódovaný blok vznikne postupným sepsáním posledního byte ze všech takto seřazených permutací. Tato implementace namísto vložení znaku konce bloku uloží pro účely dekomprimace na konec bloku index permutace, která představuje originální vstup. Při dekomprimaci známe poslední sloupec permutací (vstup samotný), jejich seřazením získame první sloupec permutací. Známe také zmíněny index. Toto jsou informace postačující k sestavení původního nezakódovaného vstupu.
+
+
+\begin{itemize}[leftmargin=0cm]
+\item{\textbf{Move to front}}
+\end{itemize}
+Tato transformace je intuitivní. Nejprve si inicializujeme abecedu, v našem případě má délku 256 znaků a nachází se v ní znaky ASCII tak, jak jdou zasebou. Vstup je zpracováván znak po znaku, pro každý znak se najde jeho pozice v této abecedě, pozice je sepsána do výstupního řetězce a daný znak je v abecedě přesunut dopředu. To způsobí, že například opakující se znak se zakóduje jako sled bytů o hodnotě 0, a také to, že opakující se dvojice znaků bude zakódována jako sled bytů o hodnotě 1 a tak dále.
+
+
+
+\begin{itemize}[leftmargin=0cm]
+\item{\textbf{Run length encoding}}
+\end{itemize}
+Způsobů, jak provádět RLE, je více. V tomto řešení se používá postup, kdy je kódována jakákoliv posloupnost stejných znaků, je-li dlouhá alespoň 4 (respektive 3) znaky. K tomu, abychom si zakódovali informaci, zda se jedná o běžný znak nebo o RLE záznam, je využito escape bytu 0xFF, který se v přiložených vstupních datech neobjevuje. Může se však objevit v posledních dvou bytech bloku transformovaného předchozími postupy -- tyto byty jsou tedy vynechány, což je samozřejmě zohledněno i při dekomprimaci. Po escape bytu následuje byte udávající počet znaků k rozgenerování, samotný znak je uložen ve třetím bytu. Jelikož RLE ovlivňuje délku bloku (může jej zkrátit), na první 2B bloku je uložena tato nová délka.
+
+
+
+\begin{itemize}[leftmargin=0cm]
+\item{\textbf{Entropy coder}}
+\end{itemize}
+Entropické kódování není v tomto řešení implementováno.
+
+
+\end{document}

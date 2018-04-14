@@ -3,7 +3,7 @@
 //created: 2018/02/23
 //purpose: rle encoding/decoding header file
 
-#include "types.hpp"
+#include "types.h"
 
 void RLEprint(char*, int);
 

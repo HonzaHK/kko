@@ -6,14 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bwted.hpp"
+#include "bwted.h"
 
-#include "types.hpp"
+#include "types.h"
 
-#include "bwt.hpp"
-#include "mtf.hpp"
-#include "rle.hpp"
-#include "huf.hpp"
+#include "bwt.h"
+#include "mtf.h"
+#include "rle.h"
+#include "huf.h"
 
 
 

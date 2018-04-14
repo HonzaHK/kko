@@ -6,19 +6,17 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "bwted.hpp"
+#include "bwted.h"
 
-using namespace std;
-
-enum emode{ //bwted mode (encode/decode)
+typedef enum { //bwted mode (encode/decode)
 	undefined,encode,decode
-};
+} emode;
 
 typedef struct { //structure for storing command line arguments
-	char* ifName=NULL;
-	char* ofName=NULL;
-	char* lfName=NULL;
-	emode mode = undefined; //user has to specify mode
+	char* ifName;
+	char* ofName;
+	char* lfName;
+	emode mode; //user has to specify mode
 
 } clargs_t;
 
@@ -64,12 +62,15 @@ int parseArgs(int argc, char* argv[], clargs_t *clargs){
 
 int main(int argc, char* argv[]){
 
-	if(strcmp(argv[1],"-h")==0){
+	if(argc==1 || (argc==2 && strcmp(argv[1],"-h")==0)){
 		printHelp();
 		return 0;
 	}
 
 	clargs_t clargs;
+	clargs.ifName = clargs.ofName = clargs.lfName = NULL;
+	clargs.mode = undefined;
+
 	if(parseArgs(argc,argv,&clargs)!=0){
 		printf("Invalid arguments. Run with -h to display help.\n");
 		return 0;
