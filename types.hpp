@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: types.h
+//created: 2018/02/23
+//purpose: string helpers header file
+
 #ifndef TYPES_HPP
 #define TYPES_HPP
 

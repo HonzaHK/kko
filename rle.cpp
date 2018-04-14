@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: rle.c
+//created: 2018/02/23
+//purpose: performs rle encoding/decoding
+
 #include <stdio.h>
 #include <stdint.h>
 #include "rle.hpp"

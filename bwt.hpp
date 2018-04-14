@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: bwt.h
+//created: 2018/02/23
+//purpose: btw encoding/decoding header file
+
 #include "types.hpp"
 
 int BWTenc(char*, int, char*);

@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: mtf.c
+//created: 2018/02/23
+//purpose: performs mtf encoding/decoding
+
 #include <stdio.h>
 #include <stdint.h>
 

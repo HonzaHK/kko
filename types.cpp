@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: types.c
+//created: 2018/02/23
+//purpose: string helper file
+
 #include <stdio.h>
 #include <string.h>
 #include "types.hpp"

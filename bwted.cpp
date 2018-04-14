@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: bwted.c
+//created: 2018/02/23
+//purpose: library (performs all the encodings)
+
 #include <stdlib.h>
 #include <string.h>
 

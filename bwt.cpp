@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: bwt.c
+//created: 2018/02/23
+//purpose: performs btw encoding/decoding
+
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>

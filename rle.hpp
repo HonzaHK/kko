@@ -1,3 +1,8 @@
+//author: Jan Kubis / xkubis13
+//file: rle.h
+//created: 2018/02/23
+//purpose: rle encoding/decoding header file
+
 #include "types.hpp"
 
 void RLEprint(char*, int);
